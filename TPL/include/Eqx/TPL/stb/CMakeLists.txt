@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.28)
 
+add_library(Eqx_Stb STATIC)
+target_sources(Eqx_Stb PRIVATE stb_image.c stb_image.hpp)
+target_include_directories(Eqx_Stb PUBLIC ../../../../Dependencies/stb/)
+
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+else ()
 add_custom_target("P_EQX_CT_STB"
     DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/stb_image.pcm")
 
@@ -20,7 +26,5 @@ target_compile_options(P_EQX_HU_STB INTERFACE
     -Wno-experimental-header-units
     -fmodule-file=${CMAKE_CURRENT_BINARY_DIR}/stb_image.pcm)
 
-add_library(Eqx_Stb STATIC)
-target_sources(Eqx_Stb PRIVATE stb_image.c stb_image.hpp)
-target_include_directories(Eqx_Stb PUBLIC ../../../../Dependencies/stb/)
 target_link_libraries(Eqx_Stb INTERFACE P_EQX_HU_STB)
+endif()
