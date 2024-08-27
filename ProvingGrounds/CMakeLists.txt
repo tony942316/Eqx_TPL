@@ -9,3 +9,4 @@ set_target_properties(ProvingGrounds PROPERTIES
     CXX_STANDARD_REQUIRED On
     CXX_EXTENSIONS Off
     EXPORT_COMPILE_COMMANDS On)
+target_link_libraries(ProvingGrounds PRIVATE Eqx_TPL)
