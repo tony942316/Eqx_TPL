@@ -1,4 +1,4 @@
-import <Eqx/TPL/stb/stb_image.hpp>;
+import Eqx.TPL.Tests;
 
 #include <iostream>
 
@@ -6,9 +6,8 @@ int main()
 {
     std::cout << "Start:\n\n";
 
-    stbi_set_flip_vertically_on_load(true);
+    tests::run();
 
-    std::cout << "\nEnd: ";
-    std::cin.get();
+    std::cout << "\nEnd: \n";
     return 0;
 }

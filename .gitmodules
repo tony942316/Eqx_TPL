@@ -2,3 +2,6 @@
 	path = TPL/Dependencies/stb
 	url = https://github.com/nothings/stb.git
 	branch = master
+[submodule "TPL/Dependencies/glfw"]
+	path = TPL/Dependencies/glfw
+	url = https://github.com/glfw/glfw.git
