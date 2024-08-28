@@ -5,3 +5,7 @@
 [submodule "TPL/Dependencies/glfw"]
 	path = TPL/Dependencies/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "TPL/Dependencies/glm"]
+	path = TPL/Dependencies/glm
+	url = https://github.com/g-truc/glm.git
+	branch = master

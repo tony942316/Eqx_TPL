@@ -13,6 +13,12 @@ set_target_properties(Tests PROPERTIES
     CXX_EXTENSIONS Off
     EXPORT_COMPILE_COMMANDS On)
 
+add_custom_command(TARGET Tests PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_CURRENT_SOURCE_DIR}/Resources
+        $<TARGET_FILE_DIR:ProvingGrounds>/Resources
+    COMMENT "Copying Resources")
+
 add_executable(ProvingGrounds)
 target_sources(ProvingGrounds PRIVATE Main.cpp)
 target_compile_features(ProvingGrounds PRIVATE cxx_std_20)

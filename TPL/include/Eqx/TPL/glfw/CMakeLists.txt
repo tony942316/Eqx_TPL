@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.28)
 
 add_library(Eqx_Glfw INTERFACE)
 target_sources(Eqx_Glfw INTERFACE glfw.hpp)
-target_include_directories(Eqx_Stb INTERFACE
+target_include_directories(Eqx_Glfw INTERFACE
     ../../../../Dependencies/glfw/include/)
 target_link_libraries(Eqx_Glfw INTERFACE glfw)
 
