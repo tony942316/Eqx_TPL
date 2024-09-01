@@ -6,7 +6,7 @@ add_library(Eqx_TPL_GMF INTERFACE)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 else ()
-target_compile_options(Eqx_TPL_GMF INTERFACE --relocatable-pch
+target_compile_options(Eqx_TPL_GMF INTERFACE
     -fretain-comments-from-system-headers)
 endif()
 

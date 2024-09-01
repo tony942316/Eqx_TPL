@@ -14,5 +14,6 @@ Diagnostics:
       readability-avoid-const-params-in-decls,
       readability-identifier-length,
       readability-magic-numbers,
+      bugprone-easily-swappable-parameters,
       misc-unused-using-decls ]
   UnusedIncludes: None
