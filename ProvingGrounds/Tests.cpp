@@ -1,6 +1,7 @@
 module;
 
 #include <cstdlib>
+#include <array>
 #include <string>
 #include <iostream>
 #include <bit>
