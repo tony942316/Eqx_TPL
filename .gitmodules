@@ -9,3 +9,6 @@
 	path = TPL/Dependencies/glm
 	url = https://github.com/g-truc/glm.git
 	branch = master
+[submodule "TPL/Dependencies/freetype"]
+	path = TPL/Dependencies/freetype
+	url = https://github.com/freetype/freetype.git
