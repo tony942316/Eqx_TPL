@@ -102,10 +102,10 @@ namespace tests::stb_image
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
         auto vertices = std::array<float, 20>{
-             0.5F,  0.5F, 0.0F,  1.0F, 1.0F, // top right
-             0.5F, -0.5F, 0.0F,  1.0F, 0.0F, // bottom right
-            -0.5F, -0.5F, 0.0F,  0.0F, 0.0F, // bottom left
-            -0.5F,  0.5F, 0.0F,  0.0F, 1.0F  // top left
+             0.5F,  0.5F, 0.0F,  1.0F, 0.0F, // top right
+             0.5F, -0.5F, 0.0F,  1.0F, 1.0F, // bottom right
+            -0.5F, -0.5F, 0.0F,  0.0F, 1.0F, // bottom left
+            -0.5F,  0.5F, 0.0F,  0.0F, 0.0F  // top left
         };
         auto indices = std::array<unsigned int, 6>{
             0U, 1U, 3U,
@@ -162,7 +162,6 @@ namespace tests::stb_image
         auto width = 0;
         auto height = 0;
         auto nrChannels = 0;
-        stbi_set_flip_vertically_on_load(static_cast<int>(true));
         unsigned char* data = stbi_load("Resources/Textures/BrickWall.png",
             &width, &height, &nrChannels, 0);
         if (data == nullptr)

@@ -11,6 +11,10 @@ namespace tests::freetype
     constexpr auto c_Width = 640;
     constexpr auto c_Height = 480;
 
+    // NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables)
+    constinit auto s_Char = 'A';
+    // NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables)
+
     export inline void run() noexcept;
 }
 
@@ -33,7 +37,7 @@ namespace tests::freetype
             "uniform sampler2D tex0;\n"
             "void main()\n"
             "{\n"
-            "   FragColor = texture(tex0, TexCoord);\n"
+            "   FragColor = vec4(1.0f, 0.5f, 1.0f, 0.0f);\n"
             "}\n\0";
 
         if (glfwInit() == GLFW_FALSE)
@@ -74,6 +78,24 @@ namespace tests::freetype
             {
                 glViewport(0, 0, width, height);
             });
+        glfwSetKeyCallback(window,
+            []([[maybe_unused]] GLFWwindow* window, int key,
+                [[maybe_unused]] int scancode, int action, int mods)
+            {
+                if (key < ' ' || key > '~')
+                {
+                    return;
+                }
+                if (action == GLFW_PRESS)
+                {
+                    s_Char = static_cast<char>(key);
+                    if ((mods & GLFW_MOD_SHIFT) != GLFW_MOD_SHIFT
+                        && s_Char >= 'A' && s_Char <= 'Z')
+                    {
+                        s_Char += ' ';
+                    }
+                }
+            });
 
         //NOLINTBEGIN(cppcoreguidelines-pro-type-reinterpret-cast)
         if (gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress)) == 0)
@@ -83,6 +105,9 @@ namespace tests::freetype
             std::abort();
         }
         //NOLINTEND(cppcoreguidelines-pro-type-reinterpret-cast)
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         unsigned int vs = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vs, 1, &vss, nullptr);
@@ -102,10 +127,10 @@ namespace tests::freetype
 
         // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
         auto vertices = std::array<float, 20>{
-             0.5F,  0.5F, 0.0F,  1.0F, 1.0F, // top right
-             0.5F, -0.5F, 0.0F,  1.0F, 0.0F, // bottom right
-            -0.5F, -0.5F, 0.0F,  0.0F, 0.0F, // bottom left
-            -0.5F,  0.5F, 0.0F,  0.0F, 1.0F  // top left
+             0.5F,  0.5F, 0.0F,  1.0F, 0.0F, // top right
+             0.5F, -0.5F, 0.0F,  1.0F, 1.0F, // bottom right
+            -0.5F, -0.5F, 0.0F,  0.0F, 1.0F, // bottom left
+            -0.5F,  0.5F, 0.0F,  0.0F, 0.0F  // top left
         };
         auto indices = std::array<unsigned int, 6>{
             0U, 1U, 3U,
@@ -151,7 +176,6 @@ namespace tests::freetype
 
         glBindVertexArray(0);
 
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         auto* ftlib = FT_Library{};
         auto error = FT_Init_FreeType(&ftlib);
         if (error != 0)
@@ -198,7 +222,9 @@ namespace tests::freetype
             std::abort();
         }
 
-        error = FT_Set_Pixel_Sizes(ftface, 0, 1024);
+        // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+        error = FT_Set_Pixel_Sizes(ftface, 0, 512);
+        // NOLINTEND(cppcoreguidelines-avoid-magic-numbers)
         if (error != 0)
         {
             std::cerr << "Freetype pixel size error\n";
@@ -213,7 +239,7 @@ namespace tests::freetype
             std::abort();
         }
 
-        error = FT_Load_Char(ftface, 'A', FT_LOAD_RENDER);
+        error = FT_Load_Char(ftface, s_Char, FT_LOAD_RENDER);
         if (error != 0)
         {
             std::cerr << "Freetype face load error\n";
@@ -231,6 +257,7 @@ namespace tests::freetype
         auto tex = 0U;
         glGenTextures(1, &tex);
         glBindTexture(GL_TEXTURE_2D, tex);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -247,21 +274,6 @@ namespace tests::freetype
         std::cout << "Version: " << glGetString(GL_VERSION) << '\n';
         std::cout << "Max Textures: "
             << GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS << '\n';
-
-        error = FT_Done_Face(ftface);
-        if (error != 0)
-        {
-            std::cerr << "Freetype face free error\n";
-
-            glDeleteVertexArrays(1, &VAO);
-            glDeleteBuffers(1, &VBO);
-            glDeleteBuffers(1, &EBO);
-            glDeleteProgram(sp);
-            glfwDestroyWindow(window);
-            glfwTerminate();
-
-            std::abort();
-        }
 
         while (glfwWindowShouldClose(window) == GLFW_FALSE)
         {
@@ -280,6 +292,26 @@ namespace tests::freetype
 
             glfwSetWindowTitle(window, name.c_str());
 
+            error = FT_Load_Char(ftface, s_Char, FT_LOAD_RENDER);
+            if (error != 0)
+            {
+                std::cerr << "Freetype face load error\n";
+
+                glDeleteVertexArrays(1, &VAO);
+                glDeleteBuffers(1, &VBO);
+                glDeleteBuffers(1, &EBO);
+                glDeleteProgram(sp);
+                glfwDestroyWindow(window);
+                glfwTerminate();
+
+                std::abort();
+            }
+            glBindTexture(GL_TEXTURE_2D, tex);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RED,
+                static_cast<GLsizei>(ftface->glyph->bitmap.width),
+                static_cast<GLsizei>(ftface->glyph->bitmap.rows),
+                0, GL_RED, GL_UNSIGNED_BYTE, ftface->glyph->bitmap.buffer);
+
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, tex);
             glUseProgram(sp);
@@ -292,6 +324,21 @@ namespace tests::freetype
 
             glfwSwapBuffers(window);
             glfwPollEvents();
+        }
+
+        error = FT_Done_Face(ftface);
+        if (error != 0)
+        {
+            std::cerr << "Freetype face free error\n";
+
+            glDeleteVertexArrays(1, &VAO);
+            glDeleteBuffers(1, &VBO);
+            glDeleteBuffers(1, &EBO);
+            glDeleteProgram(sp);
+            glfwDestroyWindow(window);
+            glfwTerminate();
+
+            std::abort();
         }
 
         glDeleteVertexArrays(1, &VAO);
