@@ -1,6 +1,29 @@
 cmake_minimum_required(VERSION 3.28)
 
-add_subdirectory(Dependencies/)
+FetchContent_Declare(
+    stb
+    GIT_REPOSITORY https://github.com/nothings/stb.git
+    GIT_TAG master)
+
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG master)
+
+FetchContent_Declare(
+    freetype
+    GIT_REPOSITORY https://github.com/freetype/freetype.git
+    GIT_TAG master)
+
+FetchContent_Declare(
+    glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw.git
+    GIT_TAG master)
+set(GLFW_BUILD_DOCS Off CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS Off CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES Off CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(stb glm freetype glfw)
 
 add_library(Eqx_TPL_GMF INTERFACE)
 

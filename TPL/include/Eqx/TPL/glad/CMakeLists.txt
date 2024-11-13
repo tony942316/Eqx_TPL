@@ -1,9 +1,8 @@
 cmake_minimum_required(VERSION 3.28)
 
 add_library(Eqx_Glad STATIC)
-target_sources(Eqx_Glad PRIVATE ../../../../Dependencies/glad/src/glad.c)
-target_include_directories(Eqx_Glad PUBLIC
-    ../../../../Dependencies/glad/include/)
+target_sources(Eqx_Glad PRIVATE glad.hpp glad/src/glad.c)
+target_include_directories(Eqx_Glad PUBLIC glad/include/)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 else ()
@@ -15,7 +14,7 @@ add_custom_command(
     COMMENT "Build glad Header Unit"
     COMMAND clang++ -std=c++20
         $<TARGET_PROPERTY:Eqx_TPL_GMF,INTERFACE_COMPILE_OPTIONS>
-        -I${CMAKE_CURRENT_SOURCE_DIR}/../../../../Dependencies/glad/include/
+        -I${CMAKE_CURRENT_SOURCE_DIR}/glad/include/
         -I${CMAKE_CURRENT_SOURCE_DIR}/
         -xc++-system-header --precompile glad.hpp
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/glad.hpp"

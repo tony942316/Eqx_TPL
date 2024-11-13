@@ -5,6 +5,8 @@ project(Eqx_TPL
     DESCRIPTION "Importable 3rd Party Libraries"
     LANGUAGES C CXX)
 
+include(FetchContent)
+
 add_subdirectory(TPL)
 
 if (CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)

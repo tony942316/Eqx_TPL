@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.28)
 
 add_library(Eqx_Glfw INTERFACE)
 target_sources(Eqx_Glfw INTERFACE glfw.hpp)
-target_include_directories(Eqx_Glfw INTERFACE
-    ../../../../Dependencies/glfw/include/)
 target_link_libraries(Eqx_Glfw INTERFACE glfw)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
@@ -16,7 +14,6 @@ add_custom_command(
     COMMENT "Build glfw Header Unit"
     COMMAND clang++ -std=c++20
         $<TARGET_PROPERTY:Eqx_TPL_GMF,INTERFACE_COMPILE_OPTIONS>
-        -I${CMAKE_CURRENT_SOURCE_DIR}/../../../../Dependencies/glfw/include/
         -I${CMAKE_CURRENT_SOURCE_DIR}/
         -xc++-system-header --precompile glfw.hpp
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/glfw.hpp"

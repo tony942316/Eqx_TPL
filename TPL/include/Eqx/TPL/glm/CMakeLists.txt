@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.28)
 
+FetchContent_GetProperties(
+    glm
+    SOURCE_DIR glm_source_dir)
+
 add_library(Eqx_Glm INTERFACE)
 target_sources(Eqx_Glm INTERFACE glm.hpp)
-target_include_directories(Eqx_Glm INTERFACE
-    ../../../../Dependencies/glm/)
+target_include_directories(Eqx_Glm INTERFACE ${glm_source_dir}/)
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 else ()
@@ -15,7 +18,6 @@ add_custom_command(
     COMMENT "Build glm Header Unit"
     COMMAND clang++ -std=c++20
         $<TARGET_PROPERTY:Eqx_TPL_GMF,INTERFACE_COMPILE_OPTIONS>
-        -I${CMAKE_CURRENT_SOURCE_DIR}/../../../../Dependencies/glm/
         -I${CMAKE_CURRENT_SOURCE_DIR}/
         -xc++-system-header --precompile glm.hpp
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/glm.hpp"

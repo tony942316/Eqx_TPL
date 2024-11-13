@@ -14,7 +14,6 @@ add_custom_command(
     COMMENT "Build freetype Header Unit"
     COMMAND clang++ -std=c++20
         $<TARGET_PROPERTY:Eqx_TPL_GMF,INTERFACE_COMPILE_OPTIONS>
-        -I${CMAKE_CURRENT_SOURCE_DIR}/../../../../Dependencies/freetype/include/
         -I${CMAKE_CURRENT_SOURCE_DIR}/
         -xc++-system-header --precompile freetype.hpp
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/freetype.hpp"
