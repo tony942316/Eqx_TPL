@@ -8,8 +8,10 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Eqx_CMakeInterfaces)
 
 add_subdirectory(include/Eqx/TPL/glfw/)
+add_subdirectory(include/Eqx/TPL/glad/)
+add_subdirectory(include/Eqx/TPL/stb/)
 
 add_library(Eqx_TPL INTERFACE)
 target_include_directories(Eqx_TPL INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/include/)
-target_link_libraries(Eqx_TPL INTERFACE Eqx_TPL_glfw)
+target_link_libraries(Eqx_TPL INTERFACE Eqx_TPL_glfw Eqx_TPL_glad Eqx_TPL_stb)

@@ -7,4 +7,6 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Eqx_Std)
 
-add_subdirectory(Smoke/)
+add_subdirectory(glfw/)
+add_subdirectory(glad/)
+add_subdirectory(stb_image/)

@@ -1,10 +1,12 @@
+// Explore.cpp
+
 import <Eqx/std.hpp>;
 import <Eqx/TPL/glfw/glfw.hpp>;
 
 using namespace std::literals;
 
-constexpr auto c_Width = 640;
-constexpr auto c_Height = 480;
+constexpr auto c_Width = 1920;
+constexpr auto c_Height = 1080;
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
