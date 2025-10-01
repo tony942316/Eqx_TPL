@@ -8,7 +8,7 @@ set_target_properties(Test_glm_Smoke PROPERTIES
     CXX_STANDARD_REQUIRED On
     CXX_EXTENSIONS Off
     EXPORT_COMPILE_COMMANDS On)
-target_link_libraries(Test_glm_Smoke PRIVATE Eqx_Std Eqx_TPL)
+target_link_libraries(Test_glm_Smoke PRIVATE Eqx_Std Eqx_TPL Eqx_Warnings_Error)
 
 add_executable(Test_glm_Explore)
 target_sources(Test_glm_Explore PRIVATE Main.cpp)
@@ -17,7 +17,8 @@ set_target_properties(Test_glm_Explore PROPERTIES
     CXX_STANDARD_REQUIRED On
     CXX_EXTENSIONS Off
     EXPORT_COMPILE_COMMANDS On)
-target_link_libraries(Test_glm_Explore PRIVATE Eqx_Std Eqx_TPL)
+target_link_libraries(Test_glm_Explore PRIVATE Eqx_Std Eqx_TPL
+    Eqx_Warnings_Error)
 
 add_executable(Test_glm_Smoke_Typical)
 target_sources(Test_glm_Smoke_Typical PRIVATE Main.cpp)
@@ -28,7 +29,7 @@ set_target_properties(Test_glm_Smoke_Typical PROPERTIES
     CXX_EXTENSIONS Off
     EXPORT_COMPILE_COMMANDS On)
 target_link_libraries(Test_glm_Smoke_Typical PRIVATE Eqx_Std_Typical
-    Eqx_TPL_Typical)
+    Eqx_TPL_Typical Eqx_Warnings_Error)
 
 add_executable(Test_glm_Explore_Typical)
 target_sources(Test_glm_Explore_Typical PRIVATE Main.cpp)
@@ -38,7 +39,7 @@ set_target_properties(Test_glm_Explore_Typical PROPERTIES
     CXX_EXTENSIONS Off
     EXPORT_COMPILE_COMMANDS On)
 target_link_libraries(Test_glm_Explore_Typical PRIVATE Eqx_Std_Typical
-    Eqx_TPL_Typical)
+    Eqx_TPL_Typical Eqx_Warnings_Error)
 
 eqx_copy_asan(Test_glm_Smoke_Typical)
 eqx_copy_asan(Test_glm_Explore_Typical)
