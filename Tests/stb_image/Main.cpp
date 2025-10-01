@@ -1,10 +1,17 @@
-// Explore.cpp
+// Main.cpp
 
 import <Eqx/std.hpp>;
 import <Eqx/TPL/glfw/glfw.hpp>;
 import <Eqx/TPL/glad/glad.hpp>;
+import <Eqx/TPL/stb/stb_image.hpp>;
 
 using namespace std::literals;
+
+#ifdef EQX_SMOKE
+    constexpr auto c_smoke = true;
+#else
+    constexpr auto c_smoke = false;
+#endif // EQX_SMOKE
 
 constexpr auto c_Width = 1920;
 constexpr auto c_Height = 1080;
@@ -14,15 +21,20 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     std::format_to(std::ostream_iterator<char>(std::cout), "Start\n\n"sv);
     const char *vss = "#version 330 core\n"
         "layout (location = 0) in vec3 aPos;\n"
+        "layout (location = 1) in vec2 aTexCoord;\n"
+        "out vec2 TexCoord;\n"
         "void main()\n"
         "{\n"
+        "   TexCoord = vec2(aTexCoord.x, aTexCoord.y);\n"
         "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
         "}\0";
     const char *fss = "#version 330 core\n"
         "out vec4 FragColor;\n"
+        "in vec2 TexCoord;\n"
+        "uniform sampler2D tex0;\n"
         "void main()\n"
         "{\n"
-        "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+        "   FragColor = texture(tex0, TexCoord);\n"
         "}\n\0";
 
     if (glfwInit() == GLFW_FALSE)
@@ -44,9 +56,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
     auto* window = static_cast<GLFWwindow*>(nullptr);
 
-    auto name = std::string{};
-    auto x = 0.0;
-    auto y = 0.0;
     window = glfwCreateWindow(c_Width, c_Height, "Test Glad",
         nullptr, nullptr);
 
@@ -90,11 +99,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     glDeleteShader(vs);
     glDeleteShader(fs);
 
-    auto vertices = std::array<float, 12>{
-         0.5F,  0.5F, 0.0F,  // top right
-         0.5F, -0.5F, 0.0F,  // bottom right
-        -0.5F, -0.5F, 0.0F,  // bottom left
-        -0.5F,  0.5F, 0.0F   // top left
+    auto vertices = std::array<float, 20>{
+         0.5F,  0.5F, 0.0F,  1.0F, 0.0F, // top right
+         0.5F, -0.5F, 0.0F,  1.0F, 1.0F, // bottom right
+        -0.5F, -0.5F, 0.0F,  0.0F, 1.0F, // bottom left
+        -0.5F,  0.5F, 0.0F,  0.0F, 0.0F  // top left
     };
     auto indices = std::array<unsigned int, 6>{
         0U, 1U, 3U,
@@ -118,13 +127,42 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(),
         GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
         (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+        (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindVertexArray(0);
+
+    auto tex = 0U;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    auto width = 0;
+    auto height = 0;
+    auto nrChannels = 0;
+    unsigned char* data = stbi_load("Resources/Textures/BrickWall.png",
+        &width, &height, &nrChannels, 0);
+    if (data == nullptr)
+    {
+        std::format_to(std::ostream_iterator<char>(std::cerr),
+            "stb_image Load Failure: {}\n"sv, stbi_failure_reason());
+        std::abort();
+    }
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA,
+        GL_UNSIGNED_BYTE, data);
+    stbi_image_free(data);
+
+    glUseProgram(sp);
+    glUniform1i(glGetUniformLocation(sp, "tex0"), 0);
 
     const char* version = std::bit_cast<const char*>(glGetString(GL_VERSION));
     std::format_to(std::ostream_iterator<char>(std::cout),
@@ -136,16 +174,16 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         glClearColor(0.2F, 0.3F, 0.3F, 1.0F);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glfwGetCursorPos(window, &x, &y);
-
-        name = std::format("glfw Test --- Mouse Position: ({}, {})",
-            std::to_string(x), std::to_string(y));
-
-        glfwSetWindowTitle(window, name.c_str());
-
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, tex);
         glUseProgram(sp);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        if constexpr (c_smoke == true)
+        {
+            glfwSetWindowShouldClose(window, GL_TRUE);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();

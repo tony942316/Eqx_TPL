@@ -1,10 +1,16 @@
-// Smoke.cpp
+// Main.cpp
 
 import <Eqx/std.hpp>;
 import <Eqx/TPL/glfw/glfw.hpp>;
 import <Eqx/TPL/glad/glad.hpp>;
 
 using namespace std::literals;
+
+#ifdef EQX_SMOKE
+    constexpr auto c_smoke = true;
+#else
+    constexpr auto c_smoke = false;
+#endif // EQX_SMOKE
 
 constexpr auto c_Width = 1920;
 constexpr auto c_Height = 1080;
@@ -137,7 +143,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-        glfwSetWindowShouldClose(window, GL_TRUE);
+        if constexpr (c_smoke == true)
+        {
+            glfwSetWindowShouldClose(window, GL_TRUE);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();

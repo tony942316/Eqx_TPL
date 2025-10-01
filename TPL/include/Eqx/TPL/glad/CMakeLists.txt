@@ -8,7 +8,16 @@ target_sources(Eqx_TPL_glad PRIVATE
 target_compile_features(Eqx_TPL_glad PUBLIC cxx_std_20)
 target_include_directories(Eqx_TPL_glad PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/glad/include)
-target_link_libraries(Eqx_TPL_glad PUBLIC Eqx_Typical)
+
+add_library(Eqx_TPL_glad_Typical STATIC)
+target_sources(Eqx_TPL_glad_Typical PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/glad.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/glad/include/glad/glad.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/glad/src/glad.c)
+target_compile_features(Eqx_TPL_glad_Typical PUBLIC cxx_std_20)
+target_include_directories(Eqx_TPL_glad_Typical PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/glad/include)
+target_link_libraries(Eqx_TPL_glad_Typical PUBLIC Eqx_Typical)
 
 if (Eqx_Clang)
     add_custom_command(
