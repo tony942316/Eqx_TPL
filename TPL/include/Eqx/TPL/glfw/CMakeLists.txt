@@ -12,11 +12,15 @@ FetchContent_MakeAvailable(glfw)
 
 add_library(Eqx_TPL_glfw INTERFACE)
 target_sources(Eqx_TPL_glfw INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/glfw.hpp)
+target_include_directories(Eqx_TPL_glfw INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../../include/)
 target_compile_features(Eqx_TPL_glfw INTERFACE cxx_std_20)
 target_link_libraries(Eqx_TPL_glfw INTERFACE glfw)
 
 add_library(Eqx_TPL_glfw_Typical INTERFACE)
 target_sources(Eqx_TPL_glfw_Typical INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/glfw.hpp)
+target_include_directories(Eqx_TPL_glfw_Typical INTERFACE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../../include/)
 target_compile_features(Eqx_TPL_glfw_Typical INTERFACE cxx_std_20)
 target_link_libraries(Eqx_TPL_glfw_Typical INTERFACE Eqx_Typical glfw)
 

@@ -1,87 +1,57 @@
 // Main.cpp
 
 import <Eqx/std.hpp>;
-import <Eqx/TPL/glfw/glfw.hpp>;
+
+import Eqx.TPL.Wrapper.glfw;
+
+import Eqx.TPL.Tests.Lib;
 
 using namespace std::literals;
 
-#ifdef EQX_SMOKE
-    constexpr auto c_smoke = true;
-#else
-    constexpr auto c_smoke = false;
-#endif // EQX_SMOKE
-
-constexpr auto c_width = 1920;
-constexpr auto c_height = 1080;
-
-int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
+inline void run() noexcept
 {
-    std::format_to(std::ostream_iterator<char>(std::cout), "Start\n\n"sv);
+    auto name = std::array<char, std::size_t{ 128 }>{};
+    auto frame_timer = eqx::tpl::tests::lib::Frame_Timer{};
+    auto window = eqx::tpl::wrapper::glfw::Window{ 1920, 1080,
+        std::ranges::cdata(name) };
 
-    [[maybe_unused]] auto ec = glfwInit();
-    assert(ec != GLFW_FALSE);
+    window.make_context_current();
+    window.swap_interval(1);
 
-    glfwSetErrorCallback([](int code, const char* msg)
-        {
-            std::format_to(std::ostream_iterator<char>(std::cerr),
-                "glfw Error Code: {}\n"sv
-                "glfw Message: {}\n"sv, code, msg);
-            assert(false);
-        });
+    frame_timer.start();
 
-    auto name = std::string(128, '\0');
-    auto x = 0.0;
-    auto y = 0.0;
-    auto start = std::chrono::steady_clock::now();
-    auto end = start;
-    auto frames = 0ull;
-    auto fps = 0.0f;
-    auto window = static_cast<GLFWwindow*>(nullptr);
-
-    window = glfwCreateWindow(c_width, c_height, "Eqx/TPL --- Test glfw",
-        nullptr, nullptr);
-
-    assert(window != nullptr);
-
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
-
-    while (glfwWindowShouldClose(window) == GLFW_FALSE)
+    while (window.window_should_close() == false)
     {
-        glfwGetCursorPos(window, &x, &y);
+        const auto [x, y] = window.get_cursor_pos();
 
         std::format_to(std::ranges::begin(name),
             "Eqx/TPL --- "sv
             "Test glfw --- "sv
             "Location: ({}, {}) --- "sv
             "Frames: {} --- "sv
-            "FPS: {}\0"sv, x, y, frames, fps);
+            "FPS: {} |\0"sv, x, y, frame_timer.get_frames(),
+            frame_timer.get_fps());
 
-        glfwSetWindowTitle(window, name.c_str());
+        window.set_window_title(std::ranges::cdata(name));
 
-        if constexpr (c_smoke == true)
-        {
-            glfwSetWindowShouldClose(window, GL_TRUE);
-        }
+        window.set_window_should_close();
 
-        ++frames;
-        end = std::chrono::steady_clock::now();
-        if ((end - start) > 1'000ms) [[unlikely]]
-        {
-            fps = (frames * 1'000.0f)
-                / std::chrono::duration_cast<std::chrono::milliseconds>(
-                    end - start).count();
-            frames = 0ull;
+        window.swap_buffers();
+        window.poll_events();
 
-            start = end;
-        }
-
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        frame_timer.end();
     }
+}
 
-    glfwDestroyWindow(window);
-    glfwTerminate();
+int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
+{
+    std::format_to(std::ostream_iterator<char>(std::cout), "Start\n\n"sv);
+
+    eqx::tpl::wrapper::glfw::init();
+
+    run();
+
+    eqx::tpl::wrapper::glfw::terminate();
 
     std::format_to(std::ostream_iterator<char>(std::cout), "\nEnd\n"sv);
     return EXIT_SUCCESS;

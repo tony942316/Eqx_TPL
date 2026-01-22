@@ -1,0 +1,7 @@
+#ifndef EQX_TPL_FREETYPE_FREETYPE_HPP
+#define EQX_TPL_FREETYPE_FREETYPE_HPP
+
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+#endif // EQX_TPL_FREETYPE_FREETYPE_HPP

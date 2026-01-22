@@ -15,11 +15,13 @@ add_library(Eqx_TPL_stb STATIC)
 target_sources(Eqx_TPL_stb PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/stb_image.c
     ${CMAKE_CURRENT_SOURCE_DIR}/stb_image.hpp)
-target_include_directories(Eqx_TPL_stb PUBLIC ${stb_source_dir}/)
+target_include_directories(Eqx_TPL_stb PUBLIC ${stb_source_dir}/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../../include/)
 
 add_library(Eqx_TPL_stb_Typical STATIC)
 target_sources(Eqx_TPL_stb_Typical PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/stb_image.c
     ${CMAKE_CURRENT_SOURCE_DIR}/stb_image.hpp)
-target_include_directories(Eqx_TPL_stb_Typical PUBLIC ${stb_source_dir}/)
+target_include_directories(Eqx_TPL_stb_Typical PUBLIC ${stb_source_dir}/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../../include/)
 target_link_libraries(Eqx_TPL_stb_Typical PUBLIC Eqx_Typical)
