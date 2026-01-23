@@ -131,7 +131,7 @@ export namespace eqx::tpl::tests
                     freetype->run(c);
                     break;
                 case 6:
-                    glm_freetype->run('a', static_cast<float>(x),
+                    glm_freetype->run(static_cast<float>(x),
                         static_cast<float>(y));
                     break;
                 }
@@ -146,6 +146,8 @@ export namespace eqx::tpl::tests
             stb_image.reset();
             glm.reset();
             glm_image.reset();
+            freetype.reset();
+            glm_freetype.reset();
             window.reset();
 
             eqx::tpl::wrapper::glfw::terminate();

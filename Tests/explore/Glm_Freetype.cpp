@@ -147,9 +147,10 @@ export namespace eqx::tpl::tests::explore
             this->get_context().set_uniform("tex0", 0);
         }
 
-        inline void run(const char c, const float x, const float y) noexcept
+        inline void run(const float x, const float y) noexcept
         {
-            this->draw_char(c, x, -y);
+            const auto adv = this->draw_char('L', x, -y);
+            this->draw_char('a', x + adv, -y);
 
             this->draw_string("abcdefghijklmnopqrstuvwxyz"sv, 500.0f, -300.0f);
             this->draw_string("ABCDEFGHIJKLMNOPQRSTUVWXYZ"sv, 500.0f, -400.0f);
