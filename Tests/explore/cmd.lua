@@ -2,7 +2,7 @@ vim.api.nvim_create_user_command("MakeClass", function(opts)
     local name = opts.fargs[1]
 
     local lines = {
-        "class " .. name,
+        "class " .. name .. " final",
         "{",
         "public:",
         "    " .. name .. "() = default;",

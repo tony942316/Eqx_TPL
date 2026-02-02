@@ -64,4 +64,10 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/Resources/Fonts/Hack-Regular.ttf
     COPYONLY)
 
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/Resources/Sounds/)
+configure_file(
+    ${CMAKE_SOURCE_DIR}/Resources/Sounds/Mario_Coin.mp3
+    ${CMAKE_CURRENT_BINARY_DIR}/Resources/Sounds/Mario_Coin.mp3
+    COPYONLY)
+
 eqx_copy_asan(Explore_Typical)

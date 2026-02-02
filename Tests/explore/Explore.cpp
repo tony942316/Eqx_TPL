@@ -6,6 +6,7 @@ import Eqx.TPL.Tests.Explore.Glm;
 import Eqx.TPL.Tests.Explore.Glm_Image;
 import Eqx.TPL.Tests.Explore.Freetype;
 import Eqx.TPL.Tests.Explore.Glm_Freetype;
+import Eqx.TPL.Tests.Explore.Miniaudio;
 
 import <Eqx/std.hpp>;
 
@@ -54,6 +55,8 @@ export namespace eqx::tpl::tests
                 eqx::tpl::tests::explore::Freetype>();
             auto glm_freetype = std::make_optional<
                 eqx::tpl::tests::explore::Glm_Freetype>(width, height);
+            auto miniaudio = std::make_optional<
+                eqx::tpl::tests::explore::Miniaudio>();
 
             auto c = 'Q';
             auto index = 0;
@@ -133,6 +136,9 @@ export namespace eqx::tpl::tests
                 case 6:
                     glm_freetype->run(static_cast<float>(x),
                         static_cast<float>(y));
+                    break;
+                case 7:
+                    miniaudio->run();
                     break;
                 }
 
