@@ -26,7 +26,6 @@ export namespace eqx::tpl::wrapper::glfw
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
     }
 
     inline void terminate() noexcept
@@ -76,7 +75,7 @@ export namespace eqx::tpl::wrapper::glfw
             max_fragment_texture_units);
     }
 
-    enum class Key
+    enum class Key : int
     {
         A = GLFW_KEY_A,
         B = GLFW_KEY_B,
@@ -123,13 +122,13 @@ export namespace eqx::tpl::wrapper::glfw
         Escape = GLFW_KEY_ESCAPE
     };
 
-    enum class Mouse_Button
+    enum class Mouse_Button : int
     {
         Left = GLFW_MOUSE_BUTTON_LEFT,
         Right = GLFW_MOUSE_BUTTON_RIGHT
     };
 
-    enum class Key_State
+    enum class Key_State : int
     {
         Up = GLFW_RELEASE,
         Down = GLFW_PRESS
@@ -255,6 +254,41 @@ export namespace eqx::tpl::wrapper::glfw
         [[nodiscard]] inline bool key_up(Key key) noexcept
         {
             return !this->key_down(key);
+        }
+
+        inline void set_key_callback(void (*func)(Key, Key_State)) noexcept
+        {
+            static auto user_callback = static_cast<
+                void (*)(Key, Key_State)>(nullptr);
+
+            user_callback = func;
+
+            glfwSetKeyCallback(this->edit_window(), []
+                ([[maybe_unused]] GLFWwindow* window, int key,
+                [[maybe_unused]] int scancode, int action,
+                [[maybe_unused]] int mods) -> void
+                {
+                    std::invoke(user_callback, static_cast<Key>(key),
+                        static_cast<Key_State>(action));
+                });
+        }
+
+        inline void set_mouse_button_callback(void (*func)(Mouse_Button,
+            Key_State)) noexcept
+        {
+            static auto user_callback = static_cast<
+                void (*)(Mouse_Button, Key_State)>(nullptr);
+
+            user_callback = func;
+
+            glfwSetMouseButtonCallback(this->edit_window(), []
+                ([[maybe_unused]] GLFWwindow* window, int button, int action,
+                [[maybe_unused]] int mods) -> void
+                {
+                    std::invoke(user_callback,
+                        static_cast<Mouse_Button>(button),
+                        static_cast<Key_State>(action));
+                });
         }
 
         [[nodiscard]] inline std::pair<int, int> get_window_size() noexcept
