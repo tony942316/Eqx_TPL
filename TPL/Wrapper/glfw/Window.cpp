@@ -273,8 +273,8 @@ export namespace eqx::tpl::wrapper::glfw
                 });
         }
 
-        inline void set_mouse_button_callback(void (*func)(Mouse_Button,
-            Key_State)) noexcept
+        inline void set_mouse_button_callback(
+            void (*func)(Mouse_Button, Key_State)) noexcept
         {
             static auto user_callback = static_cast<
                 void (*)(Mouse_Button, Key_State)>(nullptr);
@@ -288,6 +288,39 @@ export namespace eqx::tpl::wrapper::glfw
                     std::invoke(user_callback,
                         static_cast<Mouse_Button>(button),
                         static_cast<Key_State>(action));
+                });
+        }
+
+        inline void set_cursor_pos_callback(
+            void (*func)(double, double)) noexcept
+        {
+            static auto user_callback = static_cast<
+                void (*)(double, double)>(nullptr);
+
+            user_callback = func;
+
+            glfwSetCursorPosCallback(this->edit_window(), []
+                ([[maybe_unused]] GLFWwindow* window, double xpos,
+                double ypos) -> void
+                {
+                    std::invoke(user_callback, xpos, ypos);
+                });
+        }
+
+        inline void set_cursor_pos_callbackf(
+            void (*func)(float, float)) noexcept
+        {
+            static auto user_callback = static_cast<
+                void (*)(float, float)>(nullptr);
+
+            user_callback = func;
+
+            glfwSetCursorPosCallback(this->edit_window(), []
+                ([[maybe_unused]] GLFWwindow* window, double xpos,
+                double ypos) -> void
+                {
+                    std::invoke(user_callback, static_cast<float>(xpos),
+                        static_cast<float>(ypos));
                 });
         }
 
