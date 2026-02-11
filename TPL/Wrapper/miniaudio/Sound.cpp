@@ -49,6 +49,11 @@ export namespace eqx::tpl::wrapper::miniaudio
             ma_sound_start(&this->edit_sound());
         }
 
+        inline void set_volume(const float change) noexcept
+        {
+            ma_sound_set_volume(&this->edit_sound(), change);
+        }
+
         [[nodiscard]] inline bool is_playing() noexcept
         {
             return ma_sound_is_playing(&this->edit_sound());
