@@ -31,6 +31,18 @@ export namespace eqx::tpl::wrapper::miniaudio
             ma_engine_uninit(&this->edit_engine());
         }
 
+        inline void start() noexcept
+        {
+            ma_engine_start(&this->edit_engine());
+        }
+
+        inline bool is_started() noexcept
+        {
+            auto device = ma_engine_get_device(&this->edit_engine());
+            assert(device != nullptr);
+            return ma_device_is_started(device);
+        }
+
         [[nodiscard]] constexpr const ma_engine& get_engine() const noexcept
         {
             return this->m_engine;

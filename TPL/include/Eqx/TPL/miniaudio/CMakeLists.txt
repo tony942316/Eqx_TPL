@@ -20,6 +20,7 @@ target_sources(Eqx_TPL_miniaudio PRIVATE
 target_include_directories(Eqx_TPL_miniaudio PUBLIC
     ${miniaudio_source_dir}/
     ${CMAKE_CURRENT_SOURCE_DIR}/)
+target_compile_definitions(Eqx_TPL_miniaudio PRIVATE MA_NO_DSOUND)
 
 add_library(Eqx_TPL_miniaudio_Typical STATIC)
 target_sources(Eqx_TPL_miniaudio_Typical PRIVATE
@@ -28,4 +29,5 @@ target_sources(Eqx_TPL_miniaudio_Typical PRIVATE
 target_include_directories(Eqx_TPL_miniaudio_Typical PUBLIC
     ${miniaudio_source_dir}/
     ${CMAKE_CURRENT_SOURCE_DIR}/)
+target_compile_definitions(Eqx_TPL_miniaudio_Typical PRIVATE MA_NO_DSOUND)
 target_link_libraries(Eqx_TPL_miniaudio_Typical PUBLIC Eqx_Typical)

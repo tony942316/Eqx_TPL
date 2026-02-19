@@ -22,6 +22,7 @@ export namespace eqx::tpl::tests::explore
             m_engine(),
             m_sound(m_engine, "Resources/Sounds/Mario_Coin.mp3"sv)
         {
+            this->edit_sound().set_looping(true);
         }
 
         inline void run() noexcept

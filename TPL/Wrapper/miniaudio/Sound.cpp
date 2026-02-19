@@ -21,10 +21,10 @@ export namespace eqx::tpl::wrapper::miniaudio
         };
 
         Sound() = delete;
+        Sound(const Sound&) = delete;
+        Sound& operator= (const Sound&) = delete;
 
-        Sound(const Sound&) = default;
         Sound(Sound&&) = default;
-        Sound& operator= (const Sound&) = default;
         Sound& operator= (Sound&&) = default;
 
         explicit inline Sound(Engine& engine,
@@ -46,7 +46,31 @@ export namespace eqx::tpl::wrapper::miniaudio
 
         inline void start() noexcept
         {
-            ma_sound_start(&this->edit_sound());
+            [[maybe_unused]] auto ec = ma_sound_start(&this->edit_sound());
+            assert(ec == MA_SUCCESS);
+        }
+
+        inline void stop() noexcept
+        {
+            ma_sound_stop(&this->edit_sound());
+        }
+
+        inline void restart() noexcept
+        {
+            this->seek_to_pcm_frame(std::uint64_t{ 0 });
+        }
+
+        inline void seek_to_pcm_frame(const std::uint64_t frame) noexcept
+        {
+            [[maybe_unused]] auto ec =
+                ma_sound_seek_to_pcm_frame(&this->edit_sound(), frame);
+            assert(ec == MA_SUCCESS);
+        }
+
+        inline void set_looping(const bool val) noexcept
+        {
+            ma_sound_set_looping(&this->edit_sound(),
+                val == true ? MA_TRUE : MA_FALSE);
         }
 
         inline void set_volume(const float change) noexcept
@@ -57,6 +81,11 @@ export namespace eqx::tpl::wrapper::miniaudio
         [[nodiscard]] inline bool is_playing() noexcept
         {
             return ma_sound_is_playing(&this->edit_sound());
+        }
+
+        [[nodiscard]] inline bool at_end() noexcept
+        {
+            return ma_sound_at_end(&this->edit_sound());
         }
 
         [[nodiscard]] constexpr const ma_sound& get_sound() const noexcept

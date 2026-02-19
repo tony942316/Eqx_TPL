@@ -14,9 +14,17 @@ inline void run() noexcept
 
     sound.start();
 
-    while (sound.is_playing() == true)
+    /*
+    while (engine.is_started() == false)
     {
         std::this_thread::sleep_for(1s);
+        engine.start();
+    }
+    */
+
+    while (sound.at_end() == false)
+    {
+        std::this_thread::sleep_for(100ms);
     }
 }
 
