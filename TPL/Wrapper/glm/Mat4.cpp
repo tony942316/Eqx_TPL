@@ -33,6 +33,12 @@ export namespace eqx::tpl::wrapper::glm
             this->edit_mat() = ::glm::translate(this->get_mat(), vec.get_vec());
         }
 
+        inline void rotate(const float rad, const Vec3& axis) noexcept
+        {
+            this->edit_mat() = ::glm::rotate(this->get_mat(), rad,
+                axis.get_vec());
+        }
+
         inline void scale(const Vec3& vec) noexcept
         {
             this->edit_mat() = ::glm::scale(this->get_mat(), vec.get_vec());

@@ -256,6 +256,11 @@ export namespace eqx::tpl::wrapper::glfw
             return !this->key_down(key);
         }
 
+        inline void set_resizable(const bool val) noexcept
+        {
+            glfwSetWindowAttrib(this->edit_window(), GLFW_RESIZABLE, val);
+        }
+
         inline void set_key_callback(void (*func)(Key, Key_State)) noexcept
         {
             static auto user_callback = static_cast<
